@@ -1,7 +1,7 @@
 """
-Healthcare Provider Fraud Detection — Streamlit app.
+Healthcare Provider Fraud Detection — Streamlit app (self-contained).
+Needs only: app.py, requirements.txt, fraud_model.joblib, metrics.json
 Run locally:  streamlit run app.py
-Deploy free:  push this repo to GitHub -> share.streamlit.io -> point at app.py
 """
 import json
 import numpy as np
@@ -10,6 +10,16 @@ import streamlit as st
 import joblib
 
 st.set_page_config(page_title="Provider Fraud Detection", page_icon="🛡️", layout="wide")
+
+# Median feature values (baked in so the app needs no data file)
+DEFAULTS = {"TotalClaims": 31.0, "UniqueBeneficiaries": 25.0, "UniqueAttendingPhys": 6.0,
+    "UniqueOperatingPhys": 3.0, "TotalReimbursed": 19805.0, "MeanReimbursed": 356.09,
+    "StdReimbursed": 674.25, "MaxReimbursed": 3300.0, "MeanDeductible": 4.29,
+    "MeanClaimDuration": 1.59, "MeanLengthOfStay": 0.0, "MeanNumDiagnosis": 2.81,
+    "MeanNumProcedure": 0.0, "MeanNumPhysicians": 1.57, "MeanPatientAge": 73.82,
+    "DeadPatientRatio": 0.0, "MeanChronicConditions": 4.51, "RenalDiseaseRatio": 0.19,
+    "MeanIPAnnualReimb": 4729.05, "MeanOPAnnualReimb": 2044.36,
+    "ClaimsPerBeneficiary": 1.1, "ClaimsPerAttendingPhys": 3.0}
 
 @st.cache_resource
 def load_artifacts():
@@ -31,14 +41,11 @@ tab1, tab2, tab3 = st.tabs(["🔮 Predict", "📂 Batch scoring", "📊 Model pe
 with tab1:
     st.subheader("Score a single provider")
     st.write("Enter a provider's aggregated claim statistics. Defaults are dataset medians.")
-    train = pd.read_csv("data/provider_train.csv")
-    defaults = train[features].median()
-
     cols = st.columns(3)
     vals = {}
     for i, f in enumerate(features):
         with cols[i % 3]:
-            vals[f] = st.number_input(f, value=float(round(defaults[f], 2)))
+            vals[f] = st.number_input(f, value=float(DEFAULTS.get(f, 0.0)))
 
     if st.button("Predict", type="primary"):
         x = scaler.transform(pd.DataFrame([vals])[features].values)
@@ -56,7 +63,7 @@ with tab1:
 # ---------- Tab 2: batch ----------
 with tab2:
     st.subheader("Batch scoring")
-    st.write("Upload a provider-level CSV (same columns as `provider_unseen.csv`) to score many providers at once.")
+    st.write("Upload a provider-level CSV (same feature columns as the training data) to score many providers at once.")
     up = st.file_uploader("CSV file", type="csv")
     if up:
         df = pd.read_csv(up)
