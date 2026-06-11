@@ -1,0 +1,32 @@
+{
+  "roc_auc": {
+    "LogisticRegression": 0.9471,
+    "XGBoost": 0.9474
+  },
+  "best_model": "XGBoost",
+  "threshold": 0.6505,
+  "val_confusion_matrix": [
+    [
+      1167,
+      59
+    ],
+    [
+      38,
+      89
+    ]
+  ],
+  "val_f1_fraud": 0.6473,
+  "unseen_flagged": 138,
+  "top_features": {
+    "TotalReimbursed": 0.25769999623298645,
+    "MaxReimbursed": 0.1509999930858612,
+    "TotalClaims": 0.04859999939799309,
+    "UniqueBeneficiaries": 0.03830000013113022,
+    "StdReimbursed": 0.03819999843835831,
+    "ClaimsPerBeneficiary": 0.03799999877810478,
+    "MeanDeductible": 0.03449999913573265,
+    "MeanLengthOfStay": 0.032099999487400055,
+    "MeanNumDiagnosis": 0.031599998474121094,
+    "MeanClaimDuration": 0.03139999881386757
+  }
+}
