@@ -1,8 +1,6 @@
 """
 Healthcare Provider Fraud Detection - Streamlit app.
-Files needed: app.py, requirements.txt, fraud_model.joblib, metrics.json
-Run locally:  streamlit run app.py
-Author: Swathanath
+author- s swathanath
 """
 import json
 import numpy as np
